@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+</head>
+<body>
+	<span id="RED"></span>
+	<canvas id="myCanvasR" width="50" height="50"></canvas>
+	<br>
+	<span id="GREEN"></span>
+	<canvas id="myCanvasG" width="50" height="50"></canvas>
+	<br>
+	<span id="BLUE"></span>
+	<canvas id="myCanvasB" width="50" height="50"></canvas>
+
+    <br><br>
+    <button onclick="start()">Connect</button>
+<br><br>
+	<canvas id="myCanvasC" width="500" height="500"></canvas>
+	
+    <script type="text/javascript">
+    function start() {
+
+        document.getElementById("RED").innerHTML = "Waiting for RED...";
+        document.getElementById("GREEN").innerHTML = "Waiting for GREEN...";
+        document.getElementById("BLUE").innerHTML = "Waiting for BLUE...";
+        var deviceID = "21003c001147353230333635";
+        var accessToken = "0cc37e4e153e3f249256c09176ee8d6e882eca3a";
+        var eventSource = new EventSource("https://api.spark.io/v1/devices/" + deviceID + "/events/?access_token=" + accessToken);
+
+        eventSource.addEventListener('open', function(e) {
+            console.log("Opened!"); },false);
+
+        eventSource.addEventListener('error', function(e) {
+            console.log("Errored!"); },false);
+
+        eventSource.addEventListener('colorinfo', function(e) {
+            var parsedData = JSON.parse(e.data);
+            var tempSpanR = document.getElementById("RED");
+            var tempSpanG = document.getElementById("GREEN");
+            var tempSpanB = document.getElementById("BLUE");
+            var color= parsedData.data;
+			
+			var R= color.split(':')[0];
+			var NumR= parseInt(R, 10);
+			tempSpanR.innerHTML = " RED: " + R;
+            tempSpanR.style.color= 'red';//"rgb("+NumR+", 0, 0)";
+			tempSpanR.style.fontSize = "50px";
+
+			var G= color.split(':')[1];
+			var NumG= parseInt(G, 10);
+            tempSpanG.innerHTML = " GREEN: " + G;
+			tempSpanG.style.color= 'green';//"rgb(0, "+NumG+", 0)";
+            tempSpanG.style.fontSize = "50px";
+
+            var B= color.split(':')[2];
+			var NumB= parseInt(B, 10);
+			tempSpanB.innerHTML = " BLUE: " + B;
+			tempSpanB.style.color= "BLUE";//"rgb(0, 0, "+NumB+")";
+            tempSpanB.style.fontSize = "50px";
+
+
+			var canvasR = document.getElementById('myCanvasR');
+      var context = canvasR.getContext('2d');
+      var centerX = canvasR.width / 2;
+      var centerY = canvasR.height / 2;
+      var radius = 25;
+
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+      context.fillStyle = "rgb("+NumR+", 0, 0)";
+      context.fill();
+      context.lineWidth = 0;
+      context.strokeStyle = "rgb("+NumR+", 0, 0)";
+      context.stroke();
+	  context.closePath();
+			
+		var canvasG = document.getElementById('myCanvasG');
+		var context = canvasG.getContext('2d');
+		var centerX = canvasG.width / 2;
+		var centerY = canvasG.height / 2;
+		var radius = 25;
+
+		context.beginPath();
+		context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+		context.fillStyle = "rgb(0, "+NumG+", 0)";
+		context.fill();
+		context.lineWidth = 0;
+		context.strokeStyle = "rgb(0, "+NumG+", 0)";
+		context.stroke();
+		context.closePath();
+		
+		var canvas = document.getElementById('myCanvasB');
+		var context = canvas.getContext('2d');
+		var centerX = canvas.width / 2;
+		var centerY = canvas.height / 2;
+		var radius = 25;
+
+		context.beginPath();
+		context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+		context.fillStyle = "rgb(0, 0, "+NumB+")";
+		context.fill();
+		context.lineWidth = 0;
+		context.strokeStyle = "rgb(0, 0, "+NumB+")";
+		context.stroke();
+		context.closePath();
+		
+		
+		
+		
+		
+	  var canvasC = document.getElementById('myCanvasC');
+      var context = canvasC.getContext('2d');
+      var centerX = canvasC.width / 2;
+      var centerY = canvasC.height / 2;
+      var radius = 250;
+
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+      context.fillStyle = "rgb("+NumR+", "+NumG+", "+NumB+")";
+      context.fill();
+      context.lineWidth = 0;
+      context.strokeStyle = "rgb("+NumR+", "+NumG+", "+NumB+")";
+      context.stroke();
+	  context.closePath();
+
+			
+        }, false);
+    }
+	
+</script>
+</html>
